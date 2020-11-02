@@ -20,7 +20,7 @@ method find*(this: Engine, name: string, args: StringTableRef = newStringTable()
         if tag.name == name or name == "":
             if level == -1 or level == tag.level:
                 for arg, value in args.pairs():
-                    if tag.args[arg] != value:
+                    if (not tag.args.hasKey(arg)) or tag.args[arg] != value:
                         breaked = true
                         break
                 if not breaked:
@@ -35,7 +35,7 @@ method findAll*(this: Engine, name: string, args: StringTableRef = newStringTabl
         if tag.name == name or name == "":
             if level == -1 or level == tag.level:
                 for arg, value in args.pairs():
-                    if tag.args[arg] != value:
+                    if (not tag.args.hasKey(arg)) or tag.args[arg] != value:
                         breaked = true
                         break
                 if not breaked:
