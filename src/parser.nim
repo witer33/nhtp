@@ -30,23 +30,25 @@ method parse_tag(this: Parser) {.base.} =
     var tag_closer = false
 
     for current_char in this.next_char():
-        if current_char == " "[0] and not in_args:
+        if current_char == ' ' and not in_args:
             in_args = true
-        elif current_char == " "[0]:
+        elif current_char == ' ':
             if arg_name != "":
                 args[arg_name] = arg_value
             arg_name = ""
             arg_value = ""
             in_value = false
-        elif current_char == "="[0] and not in_value:
+        elif current_char == '=' and not in_value:
             in_value = true
-        elif current_char == "/"[0] and not in_args and name == "":
+        elif current_char == '!' and arg_name == "":
+            return
+        elif current_char == '/' and not in_args and name == "":
             tag_closer = true
-        elif current_char == ">"[0]:
+        elif current_char == '>':
             if arg_name != "":
                 args[arg_name] = arg_value
             break
-        elif (current_char == "'"[0] or current_char == "\""[0]) and in_args:
+        elif (current_char == "'"[0] or current_char == '"') and in_args:
             if in_value:
                 arg_value.add(this.parse_string(current_char))
             else:
@@ -66,7 +68,7 @@ method parse_tokens*(this: Parser) {.base.} =
     var text = ""
 
     for current_char in this.next_char():
-        if current_char == "<"[0]:
+        if current_char == '<':
             if text != "":
                 this.tokens.add(Token(kind: TokenType.Text, content: text))
                 text = ""
