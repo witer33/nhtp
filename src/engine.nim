@@ -27,13 +27,13 @@ method find*(this: Engine, name: string, args: StringTableRef = newStringTable()
                     return tag
     raise newException(ValueError, "Tag not found.")
 
-method findAll*(this: Engine, name: string, args: StringTableRef = newStringTable(), level: int = -1, after: int = 0): seq[Tag] {.base.} =
+method findAll*(this: Engine, name: string, args: StringTableRef = newStringTable(), level: int = -1, startLevel: int = 0, after: int = 0): seq[Tag] {.base.} =
     var breaked = false
     var tags: seq[Tag]
     for index, tag in this.tags[after..^1]:
         breaked = false
         if tag.name == name or name == "":
-            if level == -1 or level == tag.level:
+            if level == -1 or level == tag.level and tag.level >= startLevel:
                 for arg, value in args.pairs():
                     if (not tag.args.hasKey(arg)) or tag.args[arg] != value:
                         breaked = true
