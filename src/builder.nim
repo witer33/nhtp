@@ -21,7 +21,7 @@ method find_closers(this: Builder) {.base.} =
     this.cursor.go_to(initial_index)
 
 method build*(this: Builder) {.base.} =
-    this.cursor = Cursor(data: this.parser.tokens)
+    this.cursor = Cursor(data: this.parser.parse_tokens())
     this.find_closers()
     var opened_tags: seq[Tag]
     var tag: Tag
