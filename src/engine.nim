@@ -1,13 +1,11 @@
 import builder, parser, types, strtabs
 
 type Engine* = ref object of RootObj
-    html*: string
     tags: seq[Tag]
 
-method run*(this: Engine) {.base.} =
-    var parser = Parser(html: this.html)
+method run*(this: Engine, html: string) {.base.} =
+    var parser = Parser(html: html)
     var builder = Builder(parser: parser)
-    parser.parse_tokens()
     builder.build()
     this.tags = builder.get_tags()
 
