@@ -20,7 +20,7 @@ method parse_string(this: Parser, sign: char): string {.base.} =
             value.add(current_char)
     return value
 
-method parse_tag(this: Parser) {.base.} = 
+method parse_tag(this: Parser, tokens: var seq[Token]) {.base.} = 
     var name = ""
     var args = newStringTable()
     var arg_name = ""
@@ -60,20 +60,22 @@ method parse_tag(this: Parser) {.base.} =
         else:
             name.add(current_char)
     if tag_closer:
-        this.tokens.add(Token(kind: TokenType.TagCloser, name: name))
+        tokens.add(Token(kind: TokenType.TagCloser, name: name))
     else:
-        this.tokens.add(Token(kind: TokenType.TagOpener, name: name, args: args))
+        tokens.add(Token(kind: TokenType.TagOpener, name: name, args: args))
 
-method parse_tokens*(this: Parser) {.base.} = 
+method parse_tokens*(this: Parser): seq[Token] {.base.} = 
     var text = ""
+    var tokens = newSeq[Token]()
 
     for current_char in this.next_char():
         if current_char == '<':
             if text != "":
-                this.tokens.add(Token(kind: TokenType.Text, content: text))
+                tokens.add(Token(kind: TokenType.Text, content: text))
                 text = ""
-            this.parse_tag()
+            this.parse_tag(tokens)
         else:
             text.add(current_char)
     if text != "":
-        this.tokens.add(Token(kind: TokenType.Text, content: text))
+        tokens.add(Token(kind: TokenType.Text, content: text))
+    return tokens
