@@ -1,6 +1,6 @@
 import engine, httpclient
 
-var html = Engine(html: newHttpClient().getContent("http://example.com"))
-html.run()
+var html = Engine()
+html.run(newHttpClient().getContent("http://example.com"))
 
 echo len(html.findAll(""))
